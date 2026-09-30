@@ -4,6 +4,7 @@ import unittest
 
 from lab7.sqlite_tasks import (
     connect,
+    count_tasks,
     create_schema,
     insert_task,
     list_tasks,
@@ -75,6 +76,13 @@ class SqliteTasksTests(unittest.TestCase):
         self.assertTrue(update_task(self.conn, task_id))
         self.assertFalse(update_task(self.conn, 42))
         self.assertEqual(len(list_tasks(self.conn)), 1)
+
+    def test_count_tasks(self) -> None:
+        """The row counter reflects every successful insert."""
+        self.assertEqual(count_tasks(self.conn), 0)
+        insert_task(self.conn, "write report")
+        insert_task(self.conn, "review code")
+        self.assertEqual(count_tasks(self.conn), 2)
 
     def test_quoted_title_is_not_sql(self) -> None:
         """Quotes in the title are stored literally, not executed."""
