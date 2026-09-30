@@ -80,6 +80,14 @@ def update_task(conn: sqlite3.Connection, task_id: int,
     return cursor.rowcount > 0
 
 
+def count_tasks(conn: sqlite3.Connection) -> int:
+    """Return the number of rows stored in the ``tasks`` table."""
+    row = conn.execute("SELECT COUNT(*) FROM tasks").fetchone()
+    if row is None:
+        raise RuntimeError("COUNT(*) always returns one row")
+    return int(row[0])
+
+
 def list_tasks(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     """Return all tasks as dictionaries ordered by identifier."""
     rows = conn.execute(
